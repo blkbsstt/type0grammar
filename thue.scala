@@ -40,7 +40,7 @@ object Thue
 		val Whitespace = """\s+""".r
 
 		val rules = input.flatMap {
-			case InputRegEx(lhs, rhs) => Rule(lhs, rhs)
+			case InputRegEx(lhs, rhs) => Some(Rule(lhs, rhs))
 			case Whitespace => None
 			case _ => println("Malformed production: " + line); None
 		}.toList
