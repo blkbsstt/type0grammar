@@ -42,7 +42,7 @@ object Thue
 		val rules = input.flatMap {
 			case InputRegEx(lhs, rhs) => Some(Rule(lhs, rhs))
 			case Whitespace => None
-			case _ => println("Malformed production: " + line); None
+			case line => println("Malformed production: " + line); None
 		}.toList
 
 		(state, rules.reverse)
