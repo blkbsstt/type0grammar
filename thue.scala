@@ -1,16 +1,13 @@
-object Thue
-{
+object Thue {
 	import util.Random
 
 	val sep = " -> "
 
-	case class Rule(lhs: String, rhs: String)
-	{
+	case class Rule(lhs: String, rhs: String) {
 		override def toString = lhs + sep + rhs 
 	}
 
-	def main(args: Array[String]) : Unit = 
-	{
+	def main(args: Array[String]) : Unit = {
 		val opts = options(args.toList)
 		if (!(opts contains "file")) return println(usage)
 		val (state, rules) = parse(opts("file"))
@@ -20,7 +17,7 @@ object Thue
 		println(execute(state, rules, opts))
 	}
 
-	val usage = """thue [-b <num>] [-d] <program_file>"""
+	val usage = """thue [-d] [-b num] <program_file>"""
 
 	def options(args: List[String], opts: Map[String, String] = Map.empty) : Map[String, String] = 
 		args match {
@@ -30,8 +27,7 @@ object Thue
 			case _ => opts
 		}
 
-	def parse(filename: String) = 
-	{
+	def parse(filename: String) = {
 		val input = io.Source.fromFile(filename).getLines
 		val state = input.next
 
@@ -44,13 +40,12 @@ object Thue
 			case InputRegEx(lhs, rhs) => Some(Rule(lhs, rhs))
 			case Whitespace => None
 			case line => println("Malformed production: " + line); None
-		}.toList
+		} toList
 
 		(state, rules)
 	}
 
-	def execute(state: String, rules: List[Rule], opts: Map[String, String]) : String =
-	{
+	def execute(state: String, rules: List[Rule], opts: Map[String, String]) : String = {
 		if (opts contains "debug") println("step: " + state)
 		val matches = rules.flatMap(r => r.lhs.r.findAllIn(state).matchData.map((_,r.rhs))).toArray
 
@@ -61,11 +56,10 @@ object Thue
 		execute(newState, rules, opts)
 	}
 
-	def batch(state: String, rules: List[Rule], opts: Map[String, String]) =
-	{
-		var strings = Set.empty[String]
-		val i = opts("batch").toInt
-		while(strings.size < i) strings += execute(state, rules, opts)
-		strings
+	def batch(state: String, rules: List[Rule], opts: Map[String, String]) = {
+		def loop(strings: Set[String], i: Int) : Set[String] =
+			if(strings.size >= i) strings
+			else loop(strings + execute(state, rules, opts), i)
+		loop(Set.empty[String], opts("batch").toInt)
 	}
 }
