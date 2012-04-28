@@ -2,10 +2,15 @@ S
 S -> YaZ
 Y -> YX
 Xa -> aaX
-XZ -> WZ
-YW -> V
-VZ -> 
-XW -> WX
-aW -> Wa
-Va -> aV
-VW -> V
+XZ -> Z
+X -> C
+aaC -> Ca
+XC -> CC
+YC -> AD
+YC -> Y
+AC -> AD
+Da -> aD
+DZ -> E
+DC -> C
+aE -> Ea
+AE -> 
