@@ -12,19 +12,20 @@ object Thue
 	def main(args: Array[String]) : Unit = 
 	{
 		val opts = options(args.toList)
-		val optKeys = opts.keySet
-		if (!(optKeys contains "file")) return println(usage)
+		if (!(opts contains "file")) return println(usage)
 		val (state, rules) = parse(opts("file"))
-		if (optKeys contains "batch")
-			return println(batch(state, rules, opts("batch").toInt).toList.sortBy(_.size).mkString("\n"))
-		println(execute(state, rules))
+		if (opts contains "debug") println(rules.mkString("\n"))
+		if (opts contains "batch")
+			return println(batch(state, rules, opts).toList.sortBy(_.size).mkString("\n"))
+		println(execute(state, rules, opts))
 	}
 
-	val usage = """thue [-b <num>] <program_file>"""
+	val usage = """thue [-b <num>] [-d] <program_file>"""
 
-	def options(args: List[String], opts: Map[String, String] = Map.empty[String,String]) : Map[String, String] = 
+	def options(args: List[String], opts: Map[String, String] = Map.empty) : Map[String, String] = 
 		args match {
 			case "-b" :: i :: rest => options(rest, opts + ("batch" -> i))
+			case "-d" :: rest => options(rest, opts + ("debug" -> "true"))
 			case file :: Nil => opts + ("file" -> file)
 			case _ => opts
 		}
@@ -45,25 +46,26 @@ object Thue
 			case line => println("Malformed production: " + line); None
 		}.toList
 
-		(state, rules.reverse)
+		(state, rules)
 	}
 
-	def execute(state: String, rules: List[Rule]) : String =
+	def execute(state: String, rules: List[Rule], opts: Map[String, String]) : String =
 	{
+		if (opts contains "debug") println("step: " + state)
 		val matches = rules.flatMap(r => r.lhs.r.findAllIn(state).matchData.map((_,r.rhs))).toArray
 
 		if (matches isEmpty) return state
 
 		val (matchData, rhs) = matches(Random.nextInt(matches.size))
 		val newState = matchData.before + rhs + matchData.after
-		println("step: " + newState)
-		execute(newState, rules)
+		execute(newState, rules, opts)
 	}
 
-	def batch(state: String, rules: List[Rule], i: Int) =
+	def batch(state: String, rules: List[Rule], opts: Map[String, String]) =
 	{
 		var strings = Set.empty[String]
-		while(strings.size < i) strings += execute(state, rules)
+		val i = opts("batch").toInt
+		while(strings.size < i) strings += execute(state, rules, opts)
 		strings
 	}
 }
