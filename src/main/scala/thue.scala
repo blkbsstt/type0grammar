@@ -14,9 +14,7 @@ object Thue {
 		if (!(opts contains "file")) return println(usage)
 
 		val (state, rules) = parse(opts("file"), opts("sep"))
-
 		if (opts contains "debug") println(rules.mkString("\n"))
-
 		if (!((opts contains "batch") || (opts contains "times")))
 			opts += ("batch" -> "1")
 
@@ -24,7 +22,7 @@ object Thue {
 		if (!(opts contains "unsorted")) println(strings.toList.sorted.mkString("\n"))
 	}
 
-	val usage = """scala thue.scala [-b num] [-t num] [-d] [-u] <program_file>"""
+	val usage = """scala thue.scala [-b num] [-t num] [-s sep] [-d] [-u] program_file"""
 
 	def options(args: List[String], opts: Map[String, String] = Map.empty): Map[String, String] =
 		args match {

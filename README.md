@@ -41,6 +41,8 @@ Usage
 
 The program expects some combination of flags, and then a file to read the grammar from.
 
+	scala thue.scala [-b num] [-t num] [-s sep] [-d] [-u] program_file
+
 ###Flags
 
 * Batch mode:
