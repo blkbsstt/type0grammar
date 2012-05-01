@@ -1,7 +1,7 @@
 A Thue Inspired Unrestricted Grammar Implementation
 ===================================================
 
-This program takes type-0 (unrestricted) grammars and produces a string generated from that grammar.
+This program takes a type-0 (unrestricted) grammar and produces a string or set of strings generated from that grammar.
 
 Expected Grammar Format
 -----------------------
