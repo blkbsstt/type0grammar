@@ -26,12 +26,22 @@ object Thue {
 
 	def options(args: List[String], opts: Map[String, String] = Map.empty): Map[String, String] =
 		args match {
+			case list :: rest if (list startsWith "-") && !(list startsWith "--") && (list.tail.length > 1) ⇒
+				options(list.tail.map("-" + _) ++: rest, opts)
 			case "-b" :: i :: rest ⇒ options(rest, opts + ("batch" -> i))
 			case "-t" :: i :: rest ⇒ options(rest, opts + ("times" -> i))
-			case "-s" :: sep :: rest => options(rest, opts + ("sep" -> sep))
+			case "-s" :: sep :: rest ⇒ options(rest, opts + ("sep" -> sep))
 			case "-d" :: rest ⇒ options(rest, opts + ("debug" -> "true"))
 			case "-u" :: rest ⇒ options(rest, opts + ("unsorted" -> "true"))
+			case "--batch" :: rest ⇒ options("-b" :: rest, opts)
+			case "--tries" :: rest ⇒ options("-t" :: rest, opts)
+			case "--times" :: rest ⇒ options("-t" :: rest, opts)
+			case "--separator" :: rest ⇒ options("-s" :: rest, opts)
+			case "--sep" :: rest ⇒ options("-s" :: rest, opts)
+			case "--debug" :: rest ⇒ options("-d" :: rest, opts)
+			case "--unsorted" :: rest ⇒ options("-u" :: rest, opts)
 			case file :: Nil ⇒ opts + ("file" -> file)
+			case badParam :: rest ⇒ println("Unsupported parameter " + badParam); options(rest, opts)
 			case _ ⇒ opts
 		}
 

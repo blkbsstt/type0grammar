@@ -41,36 +41,36 @@ Usage
 
 The program expects some combination of flags, and then a file to read the grammar from.
 
-	scala thue.scala [-b num] [-t num] [-s sep] [-d] [-u] grammar_file
+	scala thue.scala [-b num] [-t num] [-s sep] [-du] grammar_file
 
 ###Flags
 
 * Batch mode:
 
-		-b num
+		-b num OR --batch num
 
 	Produces _num_ strings of the language defined by the grammar, seperated by newlines. If the grammar produces less than _num_ strings, it will infinite loop. If the grammar has a very low chance to produce _num_ distinct strings, it will have a very high chance to infinite loop. (Same thing applies in the normal usage, but with _num_ being 1).
 
 * Times to run:
 		
-		-t num
+		-t num OR --tries num OR --times num
 
 	Produces a set of strings by deriving from the grammar _num_ times. If both -b and -t are used, the first condition to be satisfied will be the exit condition.
 
 * Unsorted mode:
 
-		-u
+		-u OR --unsorted
 
 	With the batch or times mode enabled, the list of strings is accumulated and then sorted before displaying. Unsorted mode will instead immediately display any string generated that had not previously been in the generated set.
 
 * Custom Separator
 
-		-s sep
+		-s sep OR --sep sep OR --separator sep
 
 	Allows for changing the separator used for the productions. Default is " -> ". There is a problem setting the separator if using sbt, because of the way sbt handles input arguments. However, running through scala, or from the jar (if I add one, on the to-do list), should work well.
 
 * Debug mode:
 
-		-d
+		-d OR --debug
 
 	Produces output including the grammar that was input, and each step of applying grammar productions. 
