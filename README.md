@@ -55,7 +55,7 @@ The program expects some combination of flags, and then a file to read the gramm
 		
 		-t num
 
-	Only attemps to generate a new string _num_ times. Will produce output identical to batch mode and can be used to prevent batch mode from possibly infinite looping. If both -b and -t are used, the first condition to be satisfied will be the exit condition.
+	Produces a set of strings by deriving from the grammar _num_ times. If both -b and -t are used, the first condition to be satisfied will be the exit condition.
 
 * Unsorted mode:
 
