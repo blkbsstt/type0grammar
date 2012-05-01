@@ -8,20 +8,26 @@ object Thue {
 	}
 
 	def main(args: Array[String]) : Unit = {
-		val opts = options(args.toList)
+		var opts = options(args.toList)
+		
 		if (!(opts contains "file")) return println(usage)
+		
 		val (state, rules) = parse(opts("file"))
+		
 		if (opts contains "debug") println(rules.mkString("\n"))
-		if (opts contains "batch")
-			return println(batch(state, rules, opts).toList.sortBy(_.size).mkString("\n"))
-		println(execute(state, rules, opts))
+		
+		if (!((opts contains "batch") || (opts contains "times")))
+			opts += ("batch" -> "1")
+			
+		println(batch(state, rules, opts).toList.sorted.mkString("\n"))
 	}
 
-	val usage = """thue [-d] [-b num] <program_file>"""
+	val usage = """thue [-d] [-[Bb] num] [-t num] <program_file>"""
 
 	def options(args: List[String], opts: Map[String, String] = Map.empty) : Map[String, String] = 
 		args match {
 			case "-b" :: i :: rest => options(rest, opts + ("batch" -> i))
+			case "-t" :: i :: rest => options(rest, opts + ("times" -> i))
 			case "-d" :: rest => options(rest, opts + ("debug" -> "true"))
 			case file :: Nil => opts + ("file" -> file)
 			case _ => opts
@@ -57,9 +63,10 @@ object Thue {
 	}
 
 	def batch(state: String, rules: List[Rule], opts: Map[String, String]) = {
-		def loop(strings: Set[String], i: Int) : Set[String] =
-			if(strings.size >= i) strings
-			else loop(strings + execute(state, rules, opts), i)
-		loop(Set.empty[String], opts("batch").toInt)
+		def loop(strings: Set[String], t: Int) : Set[String] =
+			if (((opts contains "batch") && (strings.size >= opts("batch").toInt)) 
+			 || ((opts contains "times") && (t >= opts("times").toInt))) strings
+			else loop(strings + execute(state, rules, opts), t + 1)
+		loop(Set.empty[String], 0)
 	}
 }
