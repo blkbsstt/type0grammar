@@ -39,14 +39,14 @@ object Thue {
 		val input = io.Source.fromFile(filename).getLines
 		val state = input.next
 
-		val lhs = """(\S+)"""
-		val rhs = """(\S*)"""
+		val lhs = """(.+?)"""
+		val rhs = """(.*?)"""
 		val InputRegEx = (lhs + sep + rhs).r
-		val Whitespace = """\s+""".r
+		val Whitespace = """(\s*)""".r
 
 		val rules = input.flatMap {
 			case InputRegEx(lhs, rhs) ⇒ Some(Rule(lhs, rhs, sep))
-			case Whitespace ⇒ None
+			case Whitespace(_) ⇒ None
 			case line ⇒ println("Malformed production: " + line); None
 		} toList
 
