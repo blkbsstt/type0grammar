@@ -3,7 +3,7 @@ object Thue {
 
 	val defaultSep = " -> "
 
-	case class Rule(lhs: String, rhs: String, sep: String) {
+	case class Rule(lhs: String, sep: String, rhs: String) {
 		override def toString = lhs + sep + rhs
 	}
 
@@ -55,7 +55,7 @@ object Thue {
 		val Whitespace = """(\s*)""".r
 
 		val rules = input.flatMap {
-			case InputRegEx(lhs, rhs) ⇒ Some(Rule(lhs, rhs, sep))
+			case InputRegEx(lhs, rhs) ⇒ Some(Rule(lhs, sep, rhs))
 			case Whitespace(_) ⇒ None
 			case line ⇒ println("Malformed production: " + line); None
 		} toList
