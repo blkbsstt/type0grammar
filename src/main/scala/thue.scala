@@ -1,6 +1,4 @@
 object Thue {
-	import util.Random
-
 	val defaultSep = " -> "
 
 	case class Rule(lhs: String, sep: String, rhs: String) {
@@ -64,7 +62,8 @@ object Thue {
 	}
 
 	def execute(state: String, rules: List[Rule], opts: Map[String, String]): String = {
-		if (opts contains "debug") println("step: " + state)
+		import util.Random
+		if (opts contains "debug") println("> " + state)
 		val matches = rules.flatMap(r ⇒ r.lhs.r.findAllIn(state).matchData.map((_, r.rhs))).toArray
 
 		if (matches isEmpty) return state
@@ -79,6 +78,7 @@ object Thue {
 			if (((opts contains "batch") && (strings.size >= opts("batch").toInt))
 				|| ((opts contains "times") && (t >= opts("times").toInt))) strings
 			else {
+				if (opts contains "debug") println("Starting derivation")
 				val s = execute(state, rules, opts)
 				if ((opts contains "unsorted") && !strings(s)) println(s)
 				loop(strings + s, t + 1)
